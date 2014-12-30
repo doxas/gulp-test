@@ -1,17 +1,29 @@
 
-var gulp      = require('gulp');
-var webServer = require('gulp-webserver');
+var gulp = require('gulp');
+var bsync = require('browser-sync');
 
-gulp.task('default', function(){
-	console.log('default task running!');
+// browser sync
+gulp.task('bs-sync', function(){
+	bsync.init(
+		['app/*.js', 'app/*.css', 'app/*.html'],
+		{
+			port: 8888,
+			server: {
+				baseDir: './app'
+			}
+		}
+	);
 });
 
-gulp.task('server', function(){
-	gulp.src('app')
-	.pipe(webServer({
-		livereload: true
-	}));
+// browser reload
+gulp.task('bs-reload', function(){
+	bsync.reload();
+	console.log('browser reload');
 });
 
-gulp.task('default', ['server']);
+// default task
+gulp.task('default', ['bs-sync'], function(){
+	console.log('default task running');
+	gulp.watch('.app/*.*', ['bs-reload']);
+});
 
